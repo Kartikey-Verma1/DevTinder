@@ -12,6 +12,9 @@ const userAuth = async (req, res, next)=>{
         if(!user){
             throw new Error("Please login first...");
         }
+        if(req.body.email != user.email){
+            throw new Error("Please login first...")
+        }
         req.user = user;
         next();
     } catch(err){
@@ -19,4 +22,4 @@ const userAuth = async (req, res, next)=>{
     }
 }
 
-module.exports = {userAuth};
+module.exports = userAuth;
