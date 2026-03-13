@@ -4,7 +4,7 @@ const Request = require("../models/request.model");
 const User = require("../models/user.model");
 const userRouter = express.Router();
 
-const SAFE_USER_DATA = ["firstName", "lastName", "age", "gender", "about", "photourl"];
+const SAFE_USER_DATA = ["firstName", "lastName", "age", "gender", "about", "photourl", "skills"];
 
 userRouter.get("/user/requests/pending", userAuth, async (req, res)=>{
     try{

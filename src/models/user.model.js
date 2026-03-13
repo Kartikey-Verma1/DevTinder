@@ -71,7 +71,7 @@ const userSchema = new mongoose.Schema({
     },
     photourl:{
         type: String,
-        default: "https://www.vhv.rs/viewpic/ioJThwo_men-profile-icon-png-image-free-download-searchpng/",
+        default: "https://i.pinimg.com/736x/82/85/96/828596ef925a10e8c1a76d3a3be1d3e5.jpg",
         validate(value){
             if(!validator.isURL(value)){
                 throw createError(400, "Enter valid url");

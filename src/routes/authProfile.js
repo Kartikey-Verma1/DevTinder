@@ -6,6 +6,7 @@ const createError = require("../utils/createError.js");
 
 const authRouter = express.Router();
 
+
 authRouter.post("/authProfile/signup", async (req, res)=>{
     try{
         validateInputData(req);
@@ -24,7 +25,7 @@ authRouter.post("/authProfile/signup", async (req, res)=>{
         await user.save();
         res.json({
             message: "user added successfully!",
-            data: user
+            data: {firstName, lastName, age, gender, about, skills, photourl}
         });
     } catch (err){
         res.status(err.statusCode || 500).json({
@@ -40,7 +41,7 @@ authRouter.post("/authProfile/login", async (req, res)=>{
         if(!validator.isEmail(email)){
             throw createError(400, "Invalid Email");
         }
-        const user = await User.findOne({email: email});
+        const user = await User.findOne({email: email})
         if(!user){
             throw createError(400, "User not registered");
         }
@@ -55,7 +56,15 @@ authRouter.post("/authProfile/login", async (req, res)=>{
         .cookie("token", token)
         .json({
             message: `${user.firstName} ${user.lastName} Logged In!`,
-            data: user
+            data: {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                age: user.age,
+                about: user.about,
+                skills: user.skills,
+                photourl: user.photourl,
+                gender: user.gender
+            }
         });
     } catch(err){
         res.status(err.statusCode || 500).json({
