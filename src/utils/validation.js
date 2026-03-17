@@ -22,13 +22,19 @@ const validateInputData = (req)=>{
         if(age > 70) throw createError(400, "You are overage!");
     }
     if(gender){
-        if(!["male", "female", "others"].includes(gender)) throw createError(400, "Enter valid gender");
+        if(!["male", "female", "others", null].includes(gender)) throw createError(400, "Enter valid gender");
     }
     if(about && about.length > 100){
         throw createError(400, "Max limit of about section is 100!");
     }
-    if(skills && skills.length > 20){
-        throw createError(400, "Maximum number of skills allowed is 20");
+    if(skills){
+        if(skills.length > 20){
+            throw createError(400, "Maximum number of skills allowed is 20");
+        } else {
+            skills.forEach(element => {
+                if(element.length > 20) throw createError(400, "Length of skill cannot be more than 20");
+            });
+        }
     }
     if(photourl){
         if(!validator.isURL(photourl)) throw createError(400, "Enter valid url!");

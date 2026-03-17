@@ -1,7 +1,6 @@
 const createError = (statusCode, message, extra={}) => {
-    const err = new Error();
+    const err = new Error(message);
     err.statusCode = statusCode;
-    err.message = message;
     err.data = extra;
     
     return err;

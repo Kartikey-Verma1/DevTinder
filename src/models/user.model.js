@@ -67,11 +67,14 @@ const userSchema = new mongoose.Schema({
             if(value.length > 20){
                 throw createError(400, "Number of skills exceedes limit of 20");
             }
+            value.forEach(element => {
+                if(element?.length > 20) throw createError(400, "Length of skill cannot be more than 20");
+            });
         }
     },
     photourl:{
         type: String,
-        default: "https://i.pinimg.com/736x/82/85/96/828596ef925a10e8c1a76d3a3be1d3e5.jpg",
+        default: "https://i.pinimg.com/474x/30/81/11/308111056142497974b0a6d43ab5efaf.jpg",
         validate(value){
             if(!validator.isURL(value)){
                 throw createError(400, "Enter valid url");
@@ -96,6 +99,8 @@ userSchema.methods.getJWT = async function () {
 };
 
 userSchema.methods.verifyPassword = async function (password) {
+    console.log(password);
+    console.log(this.password);
     const isValid = await bcrypt.compare(password, this.password);
     return isValid;
 };

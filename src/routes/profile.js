@@ -9,9 +9,18 @@ const profileRouter = express.Router();
 
 profileRouter.get("/profile/view", userAuth, async (req, res)=>{
     try{
+        const user = req.user;
         res.json({
             message: "user profile information",
-            data: req.user
+            data: {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                age: user.age,
+                gender: user.gender,
+                photourl: user.photourl,
+                skills: user.skills,
+                about: user.about
+            }
         });
     } catch (err){
         res.status(err.statusCode || 500).json({
@@ -31,7 +40,15 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
         await user.save();
         res.json({
             message: `${user.firstName} your profile has been updated successfully!`,
-            data: user
+            data: {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                age: user.age,
+                gender: user.gender,
+                photourl: user.photourl,
+                skills: user.skills,
+                about: user.about
+            }
         });
     } catch (err) {
         res.status(err.statusCode || 500).json({
@@ -46,16 +63,16 @@ profileRouter.patch("/profile/changePassword", userAuth, async (req, res) => {
         const user = req.user;
         const isValid = await user.verifyPassword(req.body.password);
         if(!isValid){
-            throw createError(400, `Please enter correct old password!`);
+            throw createError(422, `Please enter correct old password!`);
         }
         if(!validator.isStrongPassword(req.body.newPassword)){
-            throw createError(400, `Password must include 1 capital case, 1 small case, 1 special character, 1 number and minimum length of 8!`);
+            throw createError(422, `Password must include 1 capital case, 1 small case, 1 special character, 1 number and minimum length of 8!`);
         }
-        if(req.body.newPassword != req.body.newPasswordConfirm){
-            throw createError(400, `Confirm password should be same as new password!`);
+        if(req.body.newPassword != req.body.confirmNewPassword){
+            throw createError(422, `Confirm password should be same as new password!`);
         }
-
-        user.save();
+        user.password = req.body.newPassword;
+        await user.save();
 
         res.json({
             message: `${user.firstName} your password has been changed successfully!`

@@ -39,16 +39,16 @@ authRouter.post("/authProfile/login", async (req, res)=>{
     try{
         const {email, password} = req.body;
         if(!validator.isEmail(email)){
-            throw createError(400, "Invalid Email");
+            throw createError(401, "Invalid Email");
         }
         const user = await User.findOne({email: email})
         if(!user){
-            throw createError(400, "User not registered");
+            throw createError(401, "User not registered");
         }
         
         const isPasswordValid = await user.verifyPassword(password);
         if(!isPasswordValid){
-            throw createError(400, "Wrong email or password");
+            throw createError(401, "Wrong email or password");
         }
 
         const token = await user.getJWT();
